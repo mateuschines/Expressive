@@ -1,0 +1,1 @@
+2019-04-12 20-08 > INFO  client: 172.17.0.3  nuri: localhost:8080/pessoas  statusCode: 200  body: { 	"idcnpj_cpf": 127, 	"idtipopessoa": 45, 	"idsituacaopessoa": 12, 	"idtiposexo": 12, 	"nome": "mateus rocha", 	"cce_rg": "123", 	"cnpj_cpf": 1234, 	"datacriacao": "1997-04-10" }

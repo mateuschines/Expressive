@@ -1,0 +1,76 @@
+<?php
+public function __construct(\PDO $conexaoSabium)
+    {
+        $this->conexaoSabium = $conexaoSabium;
+    }
+
+    public function insert(Pessoa $dadosPessoa)
+    {
+        $stmt = $this->conexaoSabium->prepare("
+            insert into glb.pessoa
+                (idcnpj_cpf, 
+                idtipopessoa, 
+                idsituacaopessoa, 
+                idtiposexo, 
+                cnpj_cpf, 
+                nome, 
+                cce_rg, 
+                datacriacao) 
+            values(:idcnpj_cpf,
+            :idtipopessoa,
+            :idsituacaopessoa,
+            :idtiposexo,
+            :cnpj_cpf,
+            :nome,
+            :cce_rg,
+            :datacriacao)");
+
+        $stmt->bindValue(':idcnpj_cpf', $dadosPessoa->getIdcnpjCpf());
+        $stmt->bindValue(':idtipopessoa', $dadosPessoa->getIdtipopessoa());
+        $stmt->bindValue(':idsituacaopessoa', $dadosPessoa->getIdsituacaopessoa());
+        $stmt->bindValue(':idtiposexo', $dadosPessoa->getIdtiposexo());
+        $stmt->bindValue(':cnpj_cpf', $dadosPessoa->getCnpjCpf());
+        $stmt->bindValue(':nome', $dadosPessoa->getNome());
+        $stmt->bindValue(':cce_rg', $dadosPessoa->getCceRg());
+        $stmt->bindValue(':datacriacao', $dadosPessoa->getDatacriacao());
+
+        $resultado = $this->execute($stmt);
+        return $resultado;
+    }
+
+    public function update(Pessoa $dadosPessoa, $id)
+    {
+        $stmt = $this->conexaoSabium->prepare("
+        update glb.pessoa 
+        set idtipopessoa = ?, 
+            idsituacaopessoa = ?, 
+            idtiposexo = ?, 
+            cnpj_cpf = ?, 
+            nome = ?, cce_rg = ?, 
+            datacriacao = ? 
+        where idcnpj_cpf = ?");
+
+        $stmt->bindValue(1, $dadosPessoa->getIdtipopessoa());
+        $stmt->bindValue(2, $dadosPessoa->getIdsituacaopessoa());
+        $stmt->bindValue(3, $dadosPessoa->getIdtiposexo());
+        $stmt->bindValue(4, $dadosPessoa->getCnpjCpf());
+        $stmt->bindValue(5, $dadosPessoa->getNome());
+        $stmt->bindValue(6, $dadosPessoa->getCceRg());
+        $stmt->bindValue(7, $dadosPessoa->getDatacriacao());
+        $stmt->bindValue(8, $id);
+
+        $resultado = $this->execute($stmt);
+        return $resultado;
+    }
+
+    public function findById($id)
+    {
+        $stmt = $this->conexaoSabium->prepare("select * from glb.pessoa where idcnpj_cpf = :idcpf");
+
+        $stmt->bindValue(':idcpf', $id);
+        //$stmt->fetchAll(\PDO::FETCH_CLASS);
+        //$stmt->setFetchMode(\PDO::FETCH_CLASS, Pessoa::class);
+        $this->execute($stmt);
+        $resultado = $stmt->fetch();
+        return $resultado;
+    }
